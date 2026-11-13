@@ -54,6 +54,8 @@ if __name__ == "__main__":
     ui.launch(
         auth=get_auth_credentials(),
         auth_message=LOGIN_HTML,
+        # Gradio 6.32's SSR login path drops auth_message on Hugging Face Spaces.
+        ssr_mode=False,
         css=CSS,
         js=JS,
         theme=gr.themes.Base(),

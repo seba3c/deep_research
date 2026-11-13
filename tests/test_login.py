@@ -51,6 +51,7 @@ class LoginTests(unittest.TestCase):
             launch.assert_called_once()
             auth = launch.call_args.kwargs["auth"]
             self.assertEqual(launch.call_args.kwargs["auth_message"], namespace["LOGIN_HTML"])
+            self.assertIs(launch.call_args.kwargs["ssr_mode"], False)
         return namespace, auth
 
     def test_credential_resolution(self):
@@ -97,6 +98,14 @@ class LoginTests(unittest.TestCase):
                 dotenv_path=dotenv_path,
             )
         self.assertEqual(auth, (USERNAME, PASSWORD))
+
+    def test_spaces_ssr_default_is_overridden(self):
+        # Spaces enables SSR by default; retain the custom login HTML instead.
+        self.load_app({
+            "GRADIO_SSR_MODE": "True",
+            "GRADIO_USERNAME": USERNAME,
+            "GRADIO_PASSWORD": PASSWORD,
+        })
 
     def make_client(self, environment=None):
         namespace, auth = self.load_app(environment)
