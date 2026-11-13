@@ -2,6 +2,10 @@
 
 A research project built with the OpenAI Agents SDK, with a user interface implemented using Gradio. The Planner Agent turns a research question into web searches, the Search Agent gathers and summarizes results, the Writer Agent combines the findings into a detailed report, and the Email Agent delivers it by email or Pushover notification, depending on configuration.
 
+<p align="center">
+  <img src="docs/images/deep-research-screenshot.png" alt="Deep Research interface showing a research query and generated report" width="600">
+</p>
+
 > **Lab / experimentation project.** This repo is a learning lab, not a production system. 
 > It is based on the [OpenAI Agents SDK week of the Master AI Agentic Engineering - build autonomous AI Agents](https://github.com/ed-donner/agents/tree/main/2_openai) by Ed Donner 
 > 
