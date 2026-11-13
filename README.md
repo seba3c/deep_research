@@ -2,6 +2,8 @@
 
 A research project built with the OpenAI Agents SDK, with a user interface implemented using Gradio. The Planner Agent turns a research question into web searches, the Search Agent gathers and summarizes results, the Writer Agent combines the findings into a detailed report, and the Email Agent delivers it by email or Pushover notification, depending on configuration.
 
+**Live demo on Hugging Face Spaces:** [**https://seba3c-deep-research.hf.space**](https://seba3c-deep-research.hf.space)
+
 <p align="center">
   <img src="docs/images/deep-research-screenshot.png" alt="Deep Research interface showing a research query and generated report" width="600">
 </p>
