@@ -1,5 +1,5 @@
 ---
-title: deep_research
+title: Deep Research
 app_file: app.py
 sdk: gradio
 sdk_version: 6.32.0
@@ -45,6 +45,15 @@ PUSHOVER_TOKEN=your-pushover-application-token
 ```
 
 Every research run includes delivery; `USE_EMAIL=false` selects Pushover rather than turning notifications off. Keep `.env` local; do not commit or upload credentials. In the full source repository, use a single `.env` in either this directory or the repository root to avoid conflicting settings.
+
+To require login, add both settings to `.env`:
+
+```dotenv
+GRADIO_USERNAME=your-username
+GRADIO_PASSWORD=your-password
+```
+
+Gradio will show its login page before opening the research interface. Remove both settings (or leave both empty) to disable login. Setting only one causes a startup error. Restart the app after changing credentials. Quote passwords containing spaces or special characters using `.env` syntax.
 
 Start the app:
 

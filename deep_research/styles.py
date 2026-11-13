@@ -18,6 +18,180 @@ HEADER_HTML = """
 </div>
 """
 
+# Gradio omits the app stylesheet before authentication. Include these scoped
+# styles in auth_message so the native login form can share the app's identity.
+LOGIN_CSS = """
+body:has(#dr-login-brand) {
+    --dr-bg: #fafaf7;
+    --dr-surface: #ffffff;
+    --dr-line: #0c0c0d;
+    --dr-line-soft: #e1e1da;
+    --dr-text: #0c0c0d;
+    --dr-muted: #6f6f72;
+    --dr-amber: #ecad0a;
+    --dr-blue: #209dd7;
+    --dr-purple: #753991;
+    background: var(--dr-bg) !important;
+}
+
+body:has(.dark #dr-login-brand),
+body.dark:has(#dr-login-brand),
+html.dark body:has(#dr-login-brand) {
+    --dr-bg: #0b0b0c;
+    --dr-surface: #161618;
+    --dr-line: #f1f1ec;
+    --dr-line-soft: #2a2a2d;
+    --dr-text: #f1f1ec;
+    --dr-muted: #8a8a8e;
+}
+
+.gradio-container:has(#dr-login-brand) {
+    background: var(--dr-bg) !important;
+    color: var(--dr-text) !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+}
+
+.wrap:has(#dr-login-brand) {
+    box-sizing: border-box;
+    min-height: 100svh !important;
+    margin: 0 !important;
+    padding: 2rem 1.25rem !important;
+    background: var(--dr-bg) !important;
+}
+
+/* The panel is the native login wrapper; keep its form and handlers intact. */
+.wrap:has(#dr-login-brand) > div {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 440px !important;
+    min-width: 0 !important;
+    padding: 2rem !important;
+    border: 2px solid var(--dr-line) !important;
+    border-radius: 0 !important;
+    background: var(--dr-surface) !important;
+    box-shadow: 8px 8px 0 var(--dr-line-soft) !important;
+    gap: 1.25rem !important;
+}
+
+.wrap:has(#dr-login-brand) h2 { display: none; }
+.wrap:has(#dr-login-brand) .auth { margin: 0 !important; }
+
+#dr-login-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 3px solid var(--dr-line);
+    color: var(--dr-text);
+    font-size: clamp(1.4rem, 6vw, 1.9rem);
+    font-weight: 900;
+    letter-spacing: -0.045em;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.dr-login-mark { display: flex; flex-direction: column; gap: 4px; width: 30px; flex-shrink: 0; }
+.dr-login-mark span { display: block; height: 6px; }
+.dr-login-mark span:nth-child(1) { background: var(--dr-amber); width: 100%; }
+.dr-login-mark span:nth-child(2) { background: var(--dr-blue); width: 70%; }
+.dr-login-mark span:nth-child(3) { background: var(--dr-purple); width: 45%; }
+.dr-login-sep { color: var(--dr-amber); font-weight: 300; margin: 0 0.04em; }
+.dr-login-caption {
+    display: block;
+    margin-top: 1rem;
+    color: var(--dr-muted);
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.wrap:has(#dr-login-brand) .form {
+    gap: 1.25rem !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+}
+.wrap:has(#dr-login-brand) .form .block {
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+.wrap:has(#dr-login-brand) label > span {
+    color: var(--dr-muted) !important;
+    font-family: ui-monospace, SFMono-Regular, monospace !important;
+    font-size: 0.7rem !important;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+.wrap:has(#dr-login-brand) input,
+.wrap:has(#dr-login-brand) textarea {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-height: 52px !important;
+    padding: 0.85rem 1rem !important;
+    border: 2px solid var(--dr-line) !important;
+    border-radius: 0 !important;
+    background: var(--dr-surface) !important;
+    color: var(--dr-text) !important;
+    font-family: inherit !important;
+    font-size: 1rem !important;
+    box-shadow: none !important;
+}
+.wrap:has(#dr-login-brand) input:focus,
+.wrap:has(#dr-login-brand) textarea:focus {
+    outline: none !important;
+    border-color: var(--dr-blue) !important;
+    box-shadow: 4px 4px 0 var(--dr-blue) !important;
+}
+.wrap:has(#dr-login-brand) button.primary {
+    width: 100% !important;
+    min-height: 52px !important;
+    border: 2px solid var(--dr-line) !important;
+    border-radius: 0 !important;
+    background: var(--dr-amber) !important;
+    color: #0c0c0d !important;
+    font-weight: 800 !important;
+    font-size: 0.85rem !important;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transition: background 0.15s, color 0.15s;
+}
+.wrap:has(#dr-login-brand) button.primary:hover {
+    background: var(--dr-purple) !important;
+    color: #ffffff !important;
+}
+.wrap:has(#dr-login-brand) button:focus-visible {
+    outline: 3px solid var(--dr-blue) !important;
+    outline-offset: 3px;
+}
+.wrap:has(#dr-login-brand) .creds {
+    color: #c43c30 !important;
+    font-size: 0.9rem;
+    margin: 0 !important;
+}
+body:has(.dark #dr-login-brand) .creds { color: #ff9086 !important; }
+
+@media (max-width: 480px) {
+    .wrap:has(#dr-login-brand) { padding: 1.25rem !important; }
+    .wrap:has(#dr-login-brand) > div { padding: 1.5rem 1rem !important; }
+    #dr-login-brand { gap: 0.75rem; }
+}
+"""
+
+LOGIN_HTML = f"""
+<style>{LOGIN_CSS}</style>
+<span id="dr-login-brand" role="heading" aria-level="1">
+    <span class="dr-login-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+    <span>Deep<span class="dr-login-sep">/</span>Research</span>
+</span>
+<span class="dr-login-caption">Sign in to continue</span>
+"""
+
 CSS = """
 .gradio-container {
     --dr-bg: #fafaf7;

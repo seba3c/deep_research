@@ -1,9 +1,25 @@
+import os
+
 import gradio as gr
 from dotenv import load_dotenv
 from research_manager import ResearchManager
-from styles import CSS, JS, EXAMPLES, HEADER_HTML
+from styles import CSS, JS, EXAMPLES, HEADER_HTML, LOGIN_HTML
 
 load_dotenv(override=True)
+
+
+def get_auth_credentials() -> tuple[str, str] | None:
+    """Enable login only when a complete credential pair is configured."""
+    username = os.getenv("GRADIO_USERNAME")
+    password = os.getenv("GRADIO_PASSWORD")
+    if not username and not password:
+        return None
+    if not username or not password:
+        raise ValueError(
+            "Set both GRADIO_USERNAME and GRADIO_PASSWORD to enable login, "
+            "or leave both unset to disable login."
+        )
+    return username, password
 
 
 async def run(query: str):
@@ -35,4 +51,10 @@ with gr.Blocks(title="Deep Research") as ui:
 
 
 if __name__ == "__main__":
-    ui.launch(css=CSS, js=JS, theme=gr.themes.Base())
+    ui.launch(
+        auth=get_auth_credentials(),
+        auth_message=LOGIN_HTML,
+        css=CSS,
+        js=JS,
+        theme=gr.themes.Base(),
+    )

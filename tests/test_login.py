@@ -50,6 +50,7 @@ class LoginTests(unittest.TestCase):
             dotenv_mock.assert_called_once_with(override=True)
             launch.assert_called_once()
             auth = launch.call_args.kwargs["auth"]
+            self.assertEqual(launch.call_args.kwargs["auth_message"], namespace["LOGIN_HTML"])
         return namespace, auth
 
     def test_credential_resolution(self):
@@ -99,14 +100,20 @@ class LoginTests(unittest.TestCase):
 
     def make_client(self, environment=None):
         namespace, auth = self.load_app(environment)
-        app = gr.mount_gradio_app(FastAPI(), namespace["ui"], path="/", auth=auth)
+        app = gr.mount_gradio_app(
+            FastAPI(), namespace["ui"], path="/", auth=auth,
+            auth_message=namespace["LOGIN_HTML"],
+        )
         return TestClient(app)
 
     def test_login_protects_interface_and_research_endpoints(self):
         with self.make_client(
             {"GRADIO_USERNAME": USERNAME, "GRADIO_PASSWORD": PASSWORD}
         ) as client:
-            self.assertEqual(client.get("/").status_code, 200)
+            login_page = client.get("/")
+            self.assertEqual(login_page.status_code, 200)
+            self.assertIn("dr-login-brand", login_page.text)
+            self.assertIn("Sign in to continue", login_page.text)
             self.assertEqual(client.get("/config").status_code, 401)
             for endpoint in ("/gradio_api/queue/join", "/gradio_api/api/run"):
                 self.assertEqual(
@@ -128,7 +135,9 @@ class LoginTests(unittest.TestCase):
 
     def test_access_without_login_when_credentials_absent(self):
         with self.make_client() as client:
-            self.assertEqual(client.get("/").status_code, 200)
+            page = client.get("/")
+            self.assertEqual(page.status_code, 200)
+            self.assertNotIn("dr-login-brand", page.text)
             self.assertEqual(client.get("/config").status_code, 200)
 
 
